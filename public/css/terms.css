@@ -1,0 +1,173 @@
+.wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 10px 40px 10px;
+    box-sizing: border-box;
+}
+
+/* Typography */
+.wrapper p {
+    font-size: 16px;
+    text-align: justify;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.wrapper h1 {
+    text-align: center;
+    margin-bottom: 60px;
+    color: #000;
+}
+
+.wrapper h4 {
+    font-size: 18px;
+    color: #000;
+}
+
+.wrapper h3 {
+    font-size: 24px;
+}
+
+/* Links */
+.wrapper span a {
+    text-align: left;
+    font-size: 14px;
+    color: #4e4e4e;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.5s;
+}
+
+.wrapper span a:hover {
+    color: #0054a9;
+    text-decoration: underline;
+}
+
+/* Lists */
+.wrapper ul {
+    list-style-type: square;
+    color: #000;
+}
+
+.wrapper ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Other elements */
+.wrapper strong {
+    color: #333;
+}
+
+.wrapper hr {
+    color: #000;
+    width: 200px;
+    border: 1px dotted #000;
+    margin-top: 50px;
+    padding-bottom: 1px;
+}
+
+/* Footer section */
+.wrapper #part7 {
+    background-color: #fff !important;
+    float: left;
+    padding: 29px 0 20px !important;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+}
+
+.wrapper #part7 .footer_lbox {
+    float: left;
+    width: 70% !important;
+}
+
+.wrapper #part7 .footer_lbox ul {
+    float: left;
+    padding: 0;
+    width: 100%;
+}
+
+.wrapper #part7 .footer_lbox ul li {
+    float: left;
+    list-style: none;
+    padding: 0;
+}
+
+.wrapper #part7 .footer_lbox ul li a {
+    color: #0054a9;
+    float: left;
+    font-family: "Lato", sans-serif;
+    font-size: 15px;
+    padding: 0;
+    text-decoration: none;
+}
+
+/* Icons */
+.wrapper .home-icon {
+    margin-right: 20px;
+    outline: none;
+}
+
+.wrapper .footer_lbox_small a {
+    color: #0054a9;
+    float: left;
+    font-family: "Lato", sans-serif;
+    font-size: 15px;
+    padding: 0;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media only screen and (min-device-width: 320px) and (max-device-width: 960px) {
+    .wrapper h1 {
+        font-size: 25px;
+    }
+
+    .wrapper h3 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .wrapper p {
+        font-size: 14px;
+    }
+
+    .wrapper ul {
+        margin: 0;
+        padding: 18px;
+    }
+
+    .wrapper ul li {
+        font-size: 14px;
+        text-align: justify;
+    }
+
+    .wrapper #part7 .footer_lbox {
+        float: none;
+        margin-right: 0;
+        width: auto;
+    }
+
+    .wrapper #part7 .footer_lbox ul li a {
+        font-size: 9px;
+    }
+
+    .wrapper .home-icon {
+        margin-right: 5px;
+        outline: none;
+    }
+}
+
+.mockup-img-sec {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    /* Allows clicking through to slider */
+}
+
+.cbcn-carousel-container {
+    position: relative;
+    z-index: 1;
+}
