@@ -51,6 +51,10 @@ app.get("/reset-password.html", (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
   res.sendFile(path.join(__dirname, "public", "reset-password.html"));
 });
+app.get("/delete-account", (req, res) => {
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.sendFile(path.join(__dirname, "public", "delete-account.html"));
+});
 
 
 

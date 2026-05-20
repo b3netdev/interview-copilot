@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delete Account - Ai Interview Copilot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #222;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #111827;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 28px;
+      font-size: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+    .button-contaner{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+      width: 30%;
+      padding: 14px;
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background: #b91c1c;
+    }
+
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .info-section {
+      margin-top: 34px;
+      padding-top: 26px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .info-section h2 {
+      font-size: 22px;
+      margin-bottom: 14px;
+      color: #111827;
+    }
+
+    .info-section p {
+      margin-bottom: 12px;
+      color: #4b5563;
+      font-size: 15px;
+    }
+
+    .info-section ul {
+      margin: 12px 0 18px 22px;
+      color: #4b5563;
+      font-size: 15px;
+    }
+
+    .email-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 22px;
+        margin: 20px auto;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Delete Account</h1>
+    <p class="subtitle">
+      Enter your registered email and password to delete your Ai Interview Copilot account.
+    </p>
+
+    <form id="deleteAccountForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your registered email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+      <div class="button-contaner">
+          <button type="submit" id="deleteBtn">Delete Account</button>
+        </div>
+
+      <div id="messageBox" class="message"></div>
+    </form>
+
+    <div class="info-section">
+      <h2>Account Deletion Request</h2>
+
+      <p>
+        If you want to delete your Ai Interview Copilot account and associated data,
+        please send an email to:
+      </p>
+
+      <div class="email-box">mobixed@gmail.com</div>
+
+      <p><strong>Email subject:</strong> Account Deletion Request</p>
+
+      <p>
+        Please include the email address used to create your Ai Interview Copilot account.
+      </p>
+
+      <p>
+        Once we receive your request, we will delete your account and associated data
+        from our system within 7 business days.
+      </p>
+
+      <p><strong>Deleted data may include:</strong></p>
+
+      <ul>
+        <li>Name</li>
+        <li>Email address</li>
+        <li>Profile information</li>
+        <li>Skills, experience, and field information</li>
+        <li>Exam history</li>
+        <li>Mock test results</li>
+        <li>Long question exam results</li>
+      </ul>
+
+      <p>
+        Some limited data may be retained if required for legal, security,
+        or fraud-prevention purposes.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("deleteAccountForm");
+    const messageBox = document.getElementById("messageBox");
+    const deleteBtn = document.getElementById("deleteBtn");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        showMessage("Please enter email and password.", "error");
+        return;
+      }
+
+      const confirmDelete = confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      );
+
+      if (!confirmDelete) return;
+
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = "Deleting...";
+
+      try {
+        const response = await fetch("/api/v1/user/delete-account", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage(data.message || "Something went wrong.", "error");
+        } else {
+          showMessage(data.message || "Account deleted successfully.", "success");
+          form.reset();
+        }
+      } catch (error) {
+        showMessage("Server error. Please try again later.", "error");
+      } finally {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = "Delete Account";
+      }
+    });
+
+    function showMessage(message, type) {
+      messageBox.textContent = message;
+      messageBox.className = "message " + type;
+    }
+  </script>
+</body>
+</html>
