@@ -2,6 +2,7 @@ const User = require("../model/userSchema");
 const catchAsync = require("../utils/asynchandeler");
 const AppError = require("../utils/Apperror");
 const path = require("path");
+const bcrypt = require("bcrypt");
 const fs = require("fs");
 
 exports.updateuser = catchAsync(async (req, res, next) => {
@@ -40,7 +41,7 @@ exports.resumeUpload = catchAsync(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
     userId,
     { $set: { resume: resumeData } },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   ).select("-password");
 
   if (!updatedUser) return next(new AppError("User not found", 404));
@@ -52,7 +53,6 @@ exports.resumeUpload = catchAsync(async (req, res, next) => {
     resume: resumeData,
   });
 });
-
 
 exports.deleteResume = catchAsync(async (req, res, next) => {
   const userId = req.userId;
@@ -66,30 +66,24 @@ exports.deleteResume = catchAsync(async (req, res, next) => {
 
   const resumeUrl = user.resume.url;
 
-
   let relativeUrlPath = resumeUrl;
   if (resumeUrl.startsWith("http")) {
     relativeUrlPath = new URL(resumeUrl).pathname;
   }
 
-
   if (!relativeUrlPath.startsWith("/")) {
     relativeUrlPath = "/" + relativeUrlPath;
   }
 
-
   const relativeFsPath = relativeUrlPath.replace(/^\/+/, "");
-
 
   const absolutePath = path.join(process.cwd(), relativeFsPath);
 
-  
   if (fs.existsSync(absolutePath)) {
     fs.unlinkSync(absolutePath);
   }
 
-
-  user.resume = undefined;  
+  user.resume = undefined;
   await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
@@ -98,18 +92,43 @@ exports.deleteResume = catchAsync(async (req, res, next) => {
   });
 });
 
-
-
-exports.deleteuserAccount = catchAsync(async(req,res,next)=>{
+exports.deleteuserAccount = catchAsync(async (req, res, next) => {
   const userId = req.userId;
   const payload = {
-    status:'deleted'
+    status: "deleted",
+  };
+
+  const result = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
+  if (!result) {
+    return next(new AppError("User not found", 404));
   }
-  
-  const result = await User.findByIdAndUpdate(userId,payload,{
-    new:true,
-    runValidators:true
-  })
+  res.status(200).json({
+    success: true,
+    message: "User Account deleted successfully",
+    data: result,
+  });
+});
+
+exports.deleteAccount = catchAsync(async (req, res, next) => {
+  const { email} = req.body;
+  const password = req?.body?.password?.trim();
+  const user = await User.findOne({ email });
+  if (!user) return next(new AppError("Provided emailid doesn't exists", 400));
+  if (user?.status == "deleted")
+    return next(new AppError("This account is already deleted", 400));
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return next(new AppError("Wrong password", 400));
+  const payload = {
+    status: "deleted",
+  };
+  const userId = user._id;
+  const result = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
   if (!result) {
     return next(new AppError("User not found", 404));
   }
@@ -117,6 +136,5 @@ exports.deleteuserAccount = catchAsync(async(req,res,next)=>{
     success: true,
     message: "User Account deteted successfully",
     data: result,
-  })
-
-})
+  });
+});

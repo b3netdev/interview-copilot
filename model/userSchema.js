@@ -103,6 +103,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
+    resumeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Resume',
+      default: null,
+    },
+
     resume: resumeSchema,
     resetPasswordToken: String,
     resetPasswordExpire: Date,

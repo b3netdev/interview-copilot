@@ -9,6 +9,7 @@ const { notFound, errorHandler } = require("./middleware/errorHandler");
 const AuthRouter = require("./router/authRouter")
 const UserRouter = require("./router/userRouter")
 const ExamRouter = require("./router/examRouter")
+const ResumeRouter = require("./router/resumeRouter")
 const app = express();
 const path = require("path");
 const {getQuestionAnswer} = require("./controller/examcontroller")
@@ -51,12 +52,17 @@ app.get("/reset-password.html", (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
   res.sendFile(path.join(__dirname, "public", "reset-password.html"));
 });
+app.get("/delete-account", (req, res) => {
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.sendFile(path.join(__dirname, "public", "delete-account.html"));
+});
 
 
 
 app.use('/api/v1/auth',AuthRouter)
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/exam',ExamRouter)
+app.use('/api/v1/resume',ResumeRouter)
 
 
 app.use(notFound);
@@ -65,6 +71,6 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,  () => {
-  //console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
   console.log(`✅ Environment: ${process.env.NODE_ENV}`);
 });
