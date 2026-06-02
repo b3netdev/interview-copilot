@@ -49,6 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let isActive = false;
     let isLocked = false;
     let lastScrollY = window.scrollY;
+    let isMobile = window.innerWidth <= 1024; // Check if mobile or tablet
+    
+    // Touch swipe variables
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
   
     function getIndex(index) {
       if (index < 0) return slides.length - 1;
@@ -67,6 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     function checkSectionActive() {
+      // Skip scroll-lock on mobile/tablet devices
+      if (isMobile) {
+        isActive = false;
+        document.body.style.overflow = "auto";
+        return;
+      }
+      
       const rect = section.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
   
@@ -119,7 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener(
       "wheel",
       function (e) {
-        if (!isActive) return;
+        // Disable wheel scroll behavior on mobile/tablet
+        if (isMobile || !isActive) return;
   
         e.preventDefault();
   
@@ -139,6 +154,64 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       { passive: false }
     );
+  
+    // Touch swipe handling for mobile/tablet
+    function handleTouchStart(e) {
+      if (!isMobile) return;
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }
+  
+    function handleTouchEnd(e) {
+      if (!isMobile) return;
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }
+  
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const horizontalDiff = touchEndX - touchStartX;
+      const verticalDiff = Math.abs(touchEndY - touchStartY);
+      
+      // Only process horizontal swipes (ignore vertical scrolling)
+      if (verticalDiff > 100) return;
+      
+      if (Math.abs(horizontalDiff) > swipeThreshold) {
+        if (horizontalDiff > 0) {
+          // Swipe right - go to previous slide
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+          }
+        } else {
+          // Swipe left - go to next slide
+          if (currentIndex < slides.length - 1) {
+            currentIndex++;
+            updateCarousel();
+          }
+        }
+      }
+    }
+  
+    // Add touch event listeners to carousel section
+    if (section) {
+      section.addEventListener('touchstart', handleTouchStart, false);
+      section.addEventListener('touchend', handleTouchEnd, false);
+    }
+  
+    // Handle window resize
+    window.addEventListener("resize", function() {
+      const wasMobile = isMobile;
+      isMobile = window.innerWidth <= 1024;
+      
+      if (wasMobile !== isMobile) {
+        if (isMobile) {
+          document.body.style.overflow = "auto";
+          isActive = false;
+        }
+      }
+    });
   
     updateCarousel();
     checkSectionActive();
