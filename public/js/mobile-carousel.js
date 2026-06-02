@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isMobile = window.innerWidth <= 1024; // Check if mobile or tablet
     
     // Touch swipe variables
-    let touchStartX = 0;
+    let touchStartX = 0; 
     let touchEndX = 0;
     let touchStartY = 0;
     let touchEndY = 0;
