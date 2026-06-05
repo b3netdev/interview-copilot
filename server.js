@@ -27,6 +27,10 @@ db_connection(process.env.DBURL)
 
 app.use(morgan("dev"));
 
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "public", "uploads"))
+);
 
 app.use(
   cors({

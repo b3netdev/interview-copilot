@@ -3,7 +3,80 @@ const User = require("../model/userSchema");
 const AppError = require("../utils/Apperror");
 const catchAsync = require("../utils/asynchandeler");
 
-// POST /resume  — create a new resume for the authenticated user
+
+
+
+exports.uploadResumeProfilePhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError("Profile photo is required", 400));
+  }
+
+  const userId = req.userId || req.body.userId;
+
+  if (!userId) {
+    return next(new AppError("userId is required", 400));
+  }
+
+  const userExists = await User.findById(userId);
+
+  if (!userExists) {
+    return next(new AppError("User not found", 404));
+  }
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.API_BASE_URL || `${req.protocol}://${req.get("host")}`
+    : `${req.protocol}://${req.get("host")}`
+
+  const imageUrl = `${baseUrl}/uploads/resumes/${req.file.filename}`;
+
+  let resumeId = req.body.resumeId || userExists.resumeId || "";
+
+  let resume;
+
+  if (resumeId) {
+    resume = await Resume.findOneAndUpdate(
+      {
+        _id: resumeId,
+        userId,
+      },
+      {
+        $set: {
+          "profile.profilePhoto": imageUrl,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+  }
+
+  if (!resume) {
+    resume = await Resume.create({
+      userId,
+      profile: {
+        profilePhoto: imageUrl,
+      },
+    });
+
+    await User.findByIdAndUpdate(userId, {
+      $set: {
+        resumeId: resume._id,
+      },
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Profile photo uploaded and saved successfully",
+    data: {
+      imageUrl,
+      resumeId: resume._id,
+      resume,
+    },
+  });
+});
+
 exports.addResumeData = catchAsync(async (req, res, next) => {
   const userId = req.body?.userId;
   if (!userId) return next(new AppError("userId is required", 400));

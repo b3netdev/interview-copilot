@@ -70,6 +70,10 @@ const profileSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    address: {
+      type: String,
+      default: "",
+    },
     dateOfBirth: {
       type: String,
       default: "",
@@ -234,6 +238,10 @@ const professionalExperienceSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    designation:{
+      type:String,
+      default:""
+    },
     workDetail: {
       type: String,
       default: "",
@@ -251,6 +259,12 @@ const referenceSchema = new mongoose.Schema(
     referencePersonName: {
       type: String,
       default: "",
+    },
+    designation: {
+      type: String,
+    },
+    companyName:{
+      type: String,
     },
     address: {
       type: String,
