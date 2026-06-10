@@ -77,7 +77,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-
+    verificationCode:{
+      type:String
+    },
+    verificationCodeExpiry:{
+      type: Date
+    },
+     isVerified:{
+      type:Boolean,
+      default:false
+    },
     skills: [skillSchema],
 
     qualification: {
