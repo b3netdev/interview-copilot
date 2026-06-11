@@ -1,3 +1,4 @@
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../model/userSchema");
 const catchAsync = require("../utils/asynchandeler");
 const AppError = require("../utils/Apperror");
@@ -5,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const client = new OAuth2Client(process.env.NODE_ENV == "development" ? process.env.GOOGLE_WEB_CLIENT_ID_DEV : process.env.GOOGLE_WEB_CLIENT_ID_PROD );
 
 exports.registerUser = catchAsync(async (req, res, next) => {
   const { password } = req.body;
@@ -169,10 +171,10 @@ exports.verifySignIn = catchAsync(async (req, res, next) => {
   if (!user) return next(new AppError("User not found", 404));
   const token = generateToken(user?._id);
   return res.status(200).json({
-    success:true,
+    success: true,
     token,
-    user
-  })
+    user,
+  });
 });
 
 exports.signinuser = catchAsync(async (req, res, next) => {
@@ -182,6 +184,10 @@ exports.signinuser = catchAsync(async (req, res, next) => {
   if (!user) return next(new AppError("Provided email doesn't exists", 400));
   if (user?.status == "deleted")
     return next(new AppError("Provided emailid doesn't exists", 400));
+  if(user.provider == "social")
+    return next (new AppError("This account was created using google sign in , please login with google",400))
+  if(!user.password)
+    return next (new AppError("Password is not seted for this account",400))
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return next(new AppError("Wrong password", 400));
 
@@ -193,6 +199,58 @@ exports.signinuser = catchAsync(async (req, res, next) => {
     data: user,
     token: token,
   });
+});
+
+exports.gooleSignIn = catchAsync(async (req, res, next) => {
+  const { idToken } = req.body;
+  if (!idToken) {
+    return next(new AppError("Google ID token is required", 400));
+  }
+
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_WEB_CLIENT_ID,
+  });
+
+  const payload = ticket.getPayload();
+
+  const email = payload.email;
+  const name = payload.name;
+  const photo = payload.picture;
+ if (!email) {
+    return next(new AppError("Email not found from Google account", 400));
+  }
+
+  const user = await User.findOne({
+    email,
+    status: "active",
+  });
+  if (user && user?._id) {
+    const token = generateToken(user?._id);
+    return res.status(200).json({
+      success: true,
+      message: "User logged In successfully",
+      data: user,
+      token,
+    });
+  }
+  if (!user) {
+    const payload = {};
+    payload.name = name;
+    payload.email = email;
+    payload.profilePhoto = photo;
+    payload.isVerified = true;
+    payload.provider= "social"
+    const newuser = await User.create(payload);
+    if (!newuser) return next(new AppError("Unable to sign up", 400));
+    const token = generateToken(newuser?._id);
+    return res.status(200).json({
+      success: true,
+      message: "User logged In successfully",
+      data: newuser,
+      token,
+    });
+  }
 });
 
 exports.verifyuser = catchAsync(async (req, res, next) => {

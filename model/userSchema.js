@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const skillSchema = new mongoose.Schema(
   {
@@ -36,17 +36,17 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      required: [true, 'Name is required'],
+      required: [true, "Name is required"],
     },
-    profilePhoto:{
-      type:String
+    profilePhoto: {
+      type: String,
     },
 
     email: {
       type: String,
       lowercase: true,
       trim: true,
-      required: [true, 'email is required'],
+      required: [true, "email is required"],
     },
 
     phone: {
@@ -77,22 +77,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    verificationCode:{
-      type:String
+    verificationCode: {
+      type: String,
     },
-    verificationCodeExpiry:{
-      type: Date
+    verificationCodeExpiry: {
+      type: Date,
     },
-     isVerified:{
-      type:Boolean,
-      default:false
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     skills: [skillSchema],
 
     qualification: {
       type: String,
       trim: true,
-      required: [true, 'Qualification is required'],
     },
 
     position: {
@@ -102,13 +101,23 @@ const userSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ['active', 'deleted' , 'disabled'],
-      default: 'active',
+      enum: ["active", "deleted", "disabled"],
+      default: "active",
+    },
+    provider: {
+      type: String,
+      enum: ["local", "social"],
+      default: "local",
     },
 
     password: {
       type: String,
-      required: [true, 'password is required'],
+      required: [
+        function () {
+          return this.provider === "local";
+        },
+        "Password is required",
+      ],
     },
 
     otherSkills: {
@@ -117,7 +126,7 @@ const userSchema = new mongoose.Schema(
 
     resumeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Resume',
+      ref: "Resume",
       default: null,
     },
 
@@ -132,7 +141,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index(
   { email: 1 },
-  { unique: true, partialFilterExpression: { status: 'active' } }
+  { unique: true, partialFilterExpression: { status: "active" } },
 );
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
