@@ -8,7 +8,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const googleWebClientId =
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV == "development"
     ? process.env.GOOGLE_WEB_CLIENT_ID_DEV
     : process.env.GOOGLE_WEB_CLIENT_ID_PROD;
 
