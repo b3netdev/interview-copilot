@@ -6,7 +6,14 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const client = new OAuth2Client(process.env.NODE_ENV == "development" ? process.env.GOOGLE_WEB_CLIENT_ID_DEV : process.env.GOOGLE_WEB_CLIENT_ID_PROD );
+
+const googleWebClientId =
+  process.env.NODE_ENV === "development"
+    ? process.env.GOOGLE_WEB_CLIENT_ID_DEV
+    : process.env.GOOGLE_WEB_CLIENT_ID_PROD;
+
+const client = new OAuth2Client(googleWebClientId);
+
 
 exports.registerUser = catchAsync(async (req, res, next) => {
   const { password } = req.body;
@@ -184,10 +191,15 @@ exports.signinuser = catchAsync(async (req, res, next) => {
   if (!user) return next(new AppError("Provided email doesn't exists", 400));
   if (user?.status == "deleted")
     return next(new AppError("Provided emailid doesn't exists", 400));
-  if(user.provider == "social")
-    return next (new AppError("This account was created using google sign in , please login with google",400))
-  if(!user.password)
-    return next (new AppError("Password is not seted for this account",400))
+  if (user.provider == "social")
+    return next(
+      new AppError(
+        "This account was created using google sign in , please login with google",
+        400,
+      ),
+    );
+  if (!user.password)
+    return next(new AppError("Password is not seted for this account", 400));
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return next(new AppError("Wrong password", 400));
 
@@ -207,17 +219,17 @@ exports.gooleSignIn = catchAsync(async (req, res, next) => {
     return next(new AppError("Google ID token is required", 400));
   }
 
+ 
   const ticket = await client.verifyIdToken({
     idToken,
-    audience: process.env.GOOGLE_WEB_CLIENT_ID,
+    audience: googleWebClientId,
   });
-
   const payload = ticket.getPayload();
 
   const email = payload.email;
   const name = payload.name;
   const photo = payload.picture;
- if (!email) {
+  if (!email) {
     return next(new AppError("Email not found from Google account", 400));
   }
 
@@ -240,7 +252,7 @@ exports.gooleSignIn = catchAsync(async (req, res, next) => {
     payload.email = email;
     payload.profilePhoto = photo;
     payload.isVerified = true;
-    payload.provider= "social"
+    payload.provider = "social";
     const newuser = await User.create(payload);
     if (!newuser) return next(new AppError("Unable to sign up", 400));
     const token = generateToken(newuser?._id);
